@@ -114,3 +114,6 @@ dmypy.json
 .pyre/
 pywikihow.py
 .vscode/
+simple_demo.pdf
+arial.cw127.pkl
+arial.pkl
