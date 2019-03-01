@@ -6,4 +6,4 @@ title = randomWiki["title"]
 steps = randomWiki["steps"]
 url = randomWiki["url"]
 
-pdfCreate(title, steps, url)
+pdfCreate(title, steps)

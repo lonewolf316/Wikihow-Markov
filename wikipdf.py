@@ -1,22 +1,26 @@
 from fpdf import FPDF
 import sys, requests, os, time, unicodedata
 
-def pdfCreate(title, steps, url):
+def pdfCreate(title, steps):
+    #Setup for pdf creationg, import fonts, temp files, etc.
     if not os.path.exists("temp"):
         os.mkdir("temp")
     pdf = FPDF(format='letter')
     pdf.add_font('DejaVuSansMono','','DejaVuSansMono.ttf',uni=True)
-    
     pdf.add_page()
     effective_page_width = pdf.w - 2*pdf.l_margin
+
+    #Write Title
     pdf.set_font("DejaVuSansMono", size=20)
     pdf.multi_cell(0, 10, txt=title, align="C")
 
-    print(url)    
+    #For each step get
     x=0
     stepCount = len(steps)
     while x<stepCount-1:
         time.sleep(1)
+
+        #Get image and embed if it exists
         imgurl = steps[x]["pic"]
         if imgurl != None:
             img_data = requests.get(imgurl).content
@@ -26,6 +30,7 @@ def pdfCreate(title, steps, url):
                 handler.close()
             pdf.image(imgfile, w=effective_page_width)
 
+        #Write step name and detaild step description
         pdf.set_font("DejaVuSansMono", size=18)
         pdf.multi_cell(effective_page_width, 10, txt=str(x+1)+". "+steps[x]["step"])
         pdf.ln(5)
