@@ -29,18 +29,36 @@ for article in allArticles:
         stepList = stepList + step["step"] + " "
         detailedList = detailedList + step["detailed"]
 
-#Randomly pick a number of steps based on existing step counts
+#Pick number of steps, generate title
 stepAmount = stepCounts[random.randint(0,len(stepCounts)-1)]
-
 titleModel = markovify.Text(titleList, state_size=1)
 finalTitle = titleModel.make_sentence()
+
+#initialize list and markov chains for generation
 steps=[]
 stepModel = markovify.Text(stepList, state_size=1)
+detailedModel = markovify.Text(detailedList, state_size=2)
 for step in range(0,stepAmount):
     steps.append({})
+
+    #Generate step
     while True:
         stepText = stepModel.make_sentence()
         if stepText != None:
             break
     steps[step]["step"] = stepText
-   
+
+    #Generate step details
+    fullDetailed = ""
+    for x in range(0,5):
+        while True:
+            detailedText = detailedModel.make_sentence()
+            if detailedText != None:
+                break
+        fullDetailed += " " + detailedText
+    steps[step]["detailed"] = fullDetailed
+
+    stepImg = picList[random.randint(0,len(picList)-1)]
+    steps[step]["pic"] = stepImg
+
+pdfCreate(finalTitle, steps)
